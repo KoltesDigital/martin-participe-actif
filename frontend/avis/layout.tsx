@@ -35,7 +35,22 @@ export const Layout: React.FC = () => {
 						>
 							-
 						</button>
-						<div className={styles.vote}>{vote}</div>
+						<div
+							className={styles.vote}
+							onDoubleClick={() => {
+								const value = prompt(BANDS[i].name, vote.toString());
+								if (typeof value === 'string') {
+									const newVote = parseInt(value);
+									if (!isNaN(newVote)) {
+										const newVotes = votes.slice();
+										newVotes[i] = newVote;
+										setVotes(newVotes);
+									}
+								}
+							}}
+						>
+							{vote}
+						</div>
 						<button
 							className={styles.button}
 							onClick={() => increment(i)}
