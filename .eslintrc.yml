@@ -1,0 +1,56 @@
+extends:
+  - eslint:recommended
+  - prettier
+  - plugin:import/errors
+  - plugin:import/warnings
+overrides:
+  - files: "*.js"
+    env:
+      node: true
+  - files: "**/*.{ts,tsx}"
+    extends:
+      - prettier/@typescript-eslint
+      - plugin:@typescript-eslint/eslint-recommended
+      - plugin:@typescript-eslint/recommended
+      - plugin:@typescript-eslint/recommended-requiring-type-checking
+      - plugin:import/typescript
+    parser: "@typescript-eslint/parser"
+    parserOptions:
+      project: tsconfig.json
+      sourceType: module
+    plugins:
+      - "@typescript-eslint"
+    rules:
+      "@typescript-eslint/explicit-module-boundary-types": off
+      "@typescript-eslint/no-explicit-any": off
+      "@typescript-eslint/no-var-requires": off
+      "@typescript-eslint/no-unsafe-assignment": off
+      "@typescript-eslint/no-unsafe-member-access": off
+  # - files: "**/*.spec.ts"
+  #   extends:
+  #     - plugin:chai-friendly/recommended
+  #   parserOptions:
+  #     project: tsconfig.spec.json
+  - files: "frontend/**/*.{ts,tsx}"
+    env:
+      browser: true
+    extends:
+      - plugin:react/recommended
+    parserOptions:
+      jsx: true
+      # project: tsconfig.frontend.json
+      useJSXTextNode: true
+    rules:
+      react/prop-types: off
+    settings:
+      react:
+        version: detect
+  - files: "server/**/*.{ts,tsx}"
+    env:
+      node: true
+    # parserOptions:
+    #   project: tsconfig.server.json
+parserOptions:
+  ecmaVersion: 6
+plugins:
+  - sort-keys-fix
