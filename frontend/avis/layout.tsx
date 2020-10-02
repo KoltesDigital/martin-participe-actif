@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Visualization } from './visualization';
 import styles from './layout.scss';
-import { BANDS } from './constants';
+import { BAND_INFOS } from './constants';
 
 export const Layout: React.FC = () => {
-	const [votes, setVotes] = useState(BANDS.map(() => 0));
+	const [votes, setVotes] = useState(BAND_INFOS.map(() => 0));
 
 	const increment = (i: number) => {
 		const newVotes = votes.slice();
@@ -30,7 +30,7 @@ export const Layout: React.FC = () => {
 							className={styles.button}
 							onClick={() => decrement(i)}
 							style={{
-								borderColor: BANDS[i].color,
+								borderColor: BAND_INFOS[i].color,
 							}}
 						>
 							-
@@ -38,7 +38,7 @@ export const Layout: React.FC = () => {
 						<div
 							className={styles.vote}
 							onDoubleClick={() => {
-								const value = prompt(BANDS[i].name, vote.toString());
+								const value = prompt(BAND_INFOS[i].name, vote.toString());
 								if (typeof value === 'string') {
 									const newVote = parseInt(value);
 									if (!isNaN(newVote)) {
@@ -55,7 +55,7 @@ export const Layout: React.FC = () => {
 							className={styles.button}
 							onClick={() => increment(i)}
 							style={{
-								borderColor: BANDS[i].color,
+								borderColor: BAND_INFOS[i].color,
 							}}
 						>
 							+

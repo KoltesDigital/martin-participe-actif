@@ -1,6 +1,7 @@
+import * as d3 from 'd3';
 import { Band } from './types';
 
-export const BANDS: Band[] = [
+export const BAND_INFOS: Band[] = [
 	{
 		color: '#00ca81',
 		name: 'Très favorable',
@@ -147,5 +148,11 @@ export const BAND_MARGIN = 10;
 export const SMALLEST_BAND_RADIUS = 5;
 export const SMALLEST_BAND_HEIGHT = 10;
 export const BAND_HEIGHT_GROW_FACTOR = 1.7;
+
 export const PETAL_MAX_ANGLE_SPAN = Math.PI / 4;
+
+export const COSMETIC_SHUFFLE_VOTES_INTERVAL = 5000;
+export const TRANSITION_DURATION = 300;
+export const TRANSITION_EASING = d3.easeQuadInOut;
+
 export const VIEWBOX_MARGIN = 50;
