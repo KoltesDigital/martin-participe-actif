@@ -35,13 +35,15 @@ class BandDatum {
 	readonly index: number;
 	readonly uuid: string;
 
+	groupIndexInDimension = 0;
+
 	private _d = '';
 	private _dimension!: BandDimension;
+	private _dimensionIndex = 0;
 	private _displayedVote = 0;
 	private _petals: PetalDatum[] = [];
 	private _previousD = '';
 	private _previousDisplayedVote = 0;
-	private _sortIndex = 0;
 
 	constructor(index: number) {
 		this.index = index;
@@ -54,6 +56,36 @@ class BandDatum {
 
 	get dimension() {
 		return this._dimension;
+	}
+
+	get dimensionIndex() {
+		return this._dimensionIndex;
+	}
+
+	set dimensionIndex(dimensionIndex: number) {
+		this._dimensionIndex = dimensionIndex;
+
+		const dimension = BAND_DIMENSIONS[dimensionIndex];
+		this._dimension = dimension;
+
+		const angleSpan = Math.min(
+			PETAL_MAX_ANGLE_SPAN,
+			Math.PI / this._displayedVote
+		);
+		const halfSpan = Math.sin(angleSpan) * dimension.internalRadius;
+
+		const attach = Math.sqrt(
+			dimension.internalRadius * dimension.internalRadius - halfSpan * halfSpan
+		);
+
+		this._previousD = this._d;
+		this._d = BAND_INFOS[this.index]
+			.generateShape({
+				attach,
+				dimension,
+				halfSpan,
+			})
+			.join(' ');
 	}
 
 	get displayedVote() {
@@ -114,36 +146,6 @@ class BandDatum {
 
 	get previousDisplayedVote() {
 		return this._previousDisplayedVote;
-	}
-
-	get sortIndex() {
-		return this._sortIndex;
-	}
-
-	set sortIndex(sortIndex: number) {
-		this._sortIndex = sortIndex;
-
-		const dimension = BAND_DIMENSIONS[BAND_INFOS.length - 1 - sortIndex];
-		this._dimension = dimension;
-
-		const angleSpan = Math.min(
-			PETAL_MAX_ANGLE_SPAN,
-			Math.PI / this._displayedVote
-		);
-		const halfSpan = Math.sin(angleSpan) * dimension.internalRadius;
-
-		const attach = Math.sqrt(
-			dimension.internalRadius * dimension.internalRadius - halfSpan * halfSpan
-		);
-
-		this._previousD = this._d;
-		this._d = BAND_INFOS[this.index]
-			.generateShape({
-				attach,
-				dimension,
-				halfSpan,
-			})
-			.join(' ');
 	}
 }
 
@@ -237,6 +239,11 @@ export class Visualization extends React.Component<
 			copyVotes();
 		}
 
+		let dimensionIndex = BAND_DIMENSIONS.length;
+		let groupIndexInDimension = 0;
+		let currentDimensionDisplayedVotes: number | undefined;
+		const dimensionIndexToDisplayedVotesMappings = BAND_DIMENSIONS.map(() => 0);
+		const dimensionIndexToGroupCountMappings = BAND_DIMENSIONS.map(() => 0);
 		this.svg
 			.selectAll<SVGGElement, BandDatum>('g.band')
 			.data(this.bands, ({ uuid }) => uuid)
@@ -256,11 +263,30 @@ export class Visualization extends React.Component<
 					return compareVotes;
 				}
 
-				return a.sortIndex - b.sortIndex;
+				return a.index - b.index;
 			})
 			.order()
-			.datum((datum, sortIndex) => {
-				datum.sortIndex = sortIndex;
+			.datum((datum) => {
+				if (currentDimensionDisplayedVotes !== datum.displayedVote) {
+					--dimensionIndex;
+					if (groupIndexInDimension > 0) {
+						--dimensionIndex;
+					}
+					groupIndexInDimension = 0;
+
+					dimensionIndexToDisplayedVotesMappings[dimensionIndex] =
+						datum.displayedVote;
+				} else {
+					++groupIndexInDimension;
+				}
+
+				datum.dimensionIndex = dimensionIndex;
+				datum.groupIndexInDimension = groupIndexInDimension;
+
+				++dimensionIndexToGroupCountMappings[dimensionIndex];
+
+				currentDimensionDisplayedVotes = datum.displayedVote;
+
 				return datum;
 			})
 			.call((group) => {
@@ -271,7 +297,22 @@ export class Visualization extends React.Component<
 					.ease(TRANSITION_EASING)
 					.attr(
 						'transform',
-						({ displayedVote }) => `scale(${displayedVote > 0 ? '1' : '0'})`
+						({
+							dimension,
+							dimensionIndex,
+							displayedVote,
+							groupIndexInDimension,
+						}) =>
+							`scale(${
+								displayedVote > 0
+									? lerp(
+											1,
+											dimension.internalRadius / dimension.externalRadius,
+											groupIndexInDimension /
+												dimensionIndexToGroupCountMappings[dimensionIndex]
+									  )
+									: 0
+							})`
 					);
 
 				group
@@ -321,4 +362,8 @@ export class Visualization extends React.Component<
 					.attr('transform', ({ transform }) => transform);
 			});
 	}
+}
+
+function lerp(a: number, b: number, t: number) {
+	return a * (1 - t) + b * t;
 }
