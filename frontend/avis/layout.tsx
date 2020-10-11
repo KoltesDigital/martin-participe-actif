@@ -20,10 +20,12 @@ export const Layout: React.FC = () => {
 		}
 	};
 
+	const votesSum = votes.reduce((sum, vote) => sum + vote, 0);
+
 	return (
 		<div className={styles.fullscreen}>
 			<Visualization className={styles.visualization} votes={votes} />
-			<div className={styles.overlay}>
+			<div className={styles.controlPanel}>
 				{votes.map((vote, i) => (
 					<div key={i} className={styles.voteControl}>
 						<button
@@ -62,6 +64,11 @@ export const Layout: React.FC = () => {
 						</button>
 					</div>
 				))}
+			</div>
+			<div className={styles.votesSum}>
+				<div>
+					{votesSum} opinion{votesSum > 1 && 's'}
+				</div>
 			</div>
 		</div>
 	);
