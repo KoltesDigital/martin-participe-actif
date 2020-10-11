@@ -10,7 +10,9 @@ import {
 	SMALLEST_BAND_HEIGHT,
 	SMALLEST_BAND_RADIUS,
 	VIEWBOX_MARGIN,
-	COSMETIC_SHUFFLE_VOTES_INTERVAL,
+	RANDOM_VOTES_INTERVAL,
+	RANDOM_VOTES_MAX,
+	RANDOM_VOTES_MIN,
 	TRANSITION_DURATION,
 	TRANSITION_EASING,
 } from './constants';
@@ -223,10 +225,12 @@ export class Visualization extends React.Component<
 			if (typeof this.randomVotesIntervalId === 'undefined') {
 				this.randomVotesIntervalId = setInterval(() => {
 					this.bands.forEach((band) => {
-						band.displayedVote = Math.round(Math.random() * 20);
+						band.displayedVote = Math.round(
+							lerp(RANDOM_VOTES_MIN, RANDOM_VOTES_MAX, Math.random())
+						);
 					});
 					this.updateSVG();
-				}, COSMETIC_SHUFFLE_VOTES_INTERVAL);
+				}, RANDOM_VOTES_INTERVAL);
 
 				copyVotes();
 			}

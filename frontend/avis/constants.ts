@@ -151,7 +151,10 @@ export const BAND_HEIGHT_GROW_FACTOR = 1.7;
 
 export const PETAL_MAX_ANGLE_SPAN = Math.PI / 4;
 
-export const COSMETIC_SHUFFLE_VOTES_INTERVAL = 5000;
+export const RANDOM_VOTES_INTERVAL = 5000;
+export const RANDOM_VOTES_MIN = 5;
+export const RANDOM_VOTES_MAX = 20;
+
 export const TRANSITION_DURATION = 300;
 export const TRANSITION_EASING = d3.easeQuadInOut;
 
