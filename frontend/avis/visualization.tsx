@@ -244,6 +244,7 @@ export class Visualization extends React.Component<
 				enter
 					.append('g')
 					.attr('class', 'band')
+					.attr('transform', 'scale(0)')
 					.call((group) => {
 						group.append('circle').attr('class', 'circle');
 						group.append('g').attr('class', 'petals');
@@ -263,7 +264,15 @@ export class Visualization extends React.Component<
 				return datum;
 			})
 			.call((group) => {
-				group.attr('fill', ({ index }) => BAND_INFOS[index].color);
+				group
+					.attr('fill', ({ index }) => BAND_INFOS[index].color)
+					.transition()
+					.duration(TRANSITION_DURATION)
+					.ease(TRANSITION_EASING)
+					.attr(
+						'transform',
+						({ displayedVote }) => `scale(${displayedVote > 0 ? '1' : '0'})`
+					);
 
 				group
 					.select('.circle')
