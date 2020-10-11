@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Visualization } from './visualization';
 import styles from './layout.scss';
 import { BAND_INFOS } from './constants';
+import { Button } from './button';
 
 export const Layout: React.FC = () => {
 	const [votes, setVotes] = useState(BAND_INFOS.map(() => 0));
@@ -28,15 +29,12 @@ export const Layout: React.FC = () => {
 			<div className={styles.controlPanel}>
 				{votes.map((vote, i) => (
 					<div key={i} className={styles.voteControl}>
-						<button
-							className={styles.button}
+						<Button
+							color={BAND_INFOS[i].color}
+							offset={-3}
 							onClick={() => decrement(i)}
-							style={{
-								borderColor: BAND_INFOS[i].color,
-							}}
-						>
-							-
-						</button>
+							text="-"
+						/>
 						<div
 							className={styles.vote}
 							onDoubleClick={() => {
@@ -53,15 +51,12 @@ export const Layout: React.FC = () => {
 						>
 							{vote}
 						</div>
-						<button
-							className={styles.button}
+						<Button
+							color={BAND_INFOS[i].color}
+							offset={2}
 							onClick={() => increment(i)}
-							style={{
-								borderColor: BAND_INFOS[i].color,
-							}}
-						>
-							+
-						</button>
+							text="+"
+						/>
 					</div>
 				))}
 			</div>
