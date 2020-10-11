@@ -159,4 +159,4 @@ export const RANDOM_VOTES_OPACITY = 0.5;
 export const TRANSITION_DURATION = 300;
 export const TRANSITION_EASING = d3.easeQuadInOut;
 
-export const VIEWBOX_MARGIN = 50;
+export const VIEWBOX_MARGIN = 80;
