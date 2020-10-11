@@ -13,6 +13,7 @@ import {
 	RANDOM_VOTES_INTERVAL,
 	RANDOM_VOTES_MAX,
 	RANDOM_VOTES_MIN,
+	RANDOM_VOTES_OPACITY,
 	TRANSITION_DURATION,
 	TRANSITION_EASING,
 } from './constants';
@@ -194,6 +195,7 @@ export class Visualization extends React.Component<
 
 		this.svg = d3
 			.select(this.svgRef.current)
+			.attr('opacity', '1')
 			.attr(
 				'viewBox',
 				[-VIEWBOX_SPAN, -VIEWBOX_SPAN, 2 * VIEWBOX_SPAN, 2 * VIEWBOX_SPAN].join(
@@ -224,6 +226,12 @@ export class Visualization extends React.Component<
 		if (areAllVotesZeros) {
 			if (typeof this.randomVotesIntervalId === 'undefined') {
 				this.randomVotesIntervalId = setInterval(() => {
+					this.svg
+						.transition()
+						.duration(TRANSITION_DURATION)
+						.ease(TRANSITION_EASING)
+						.attr('opacity', String(RANDOM_VOTES_OPACITY));
+
 					this.bands.forEach((band) => {
 						band.displayedVote = Math.round(
 							lerp(RANDOM_VOTES_MIN, RANDOM_VOTES_MAX, Math.random())
@@ -238,6 +246,12 @@ export class Visualization extends React.Component<
 			if (typeof this.randomVotesIntervalId !== 'undefined') {
 				clearInterval(this.randomVotesIntervalId);
 				this.randomVotesIntervalId = undefined;
+
+				this.svg
+					.transition()
+					.duration(TRANSITION_DURATION)
+					.ease(TRANSITION_EASING)
+					.attr('opacity', '1');
 			}
 
 			copyVotes();
