@@ -5,13 +5,12 @@
   "license": "MIT",
   "scripts": {
     "build": "ts-node server/build",
-    "format": "eslint . --ext .js,.ts,.tsx --fix && prettier --write **/*{.js,.json,.md,.scss,.ts,.tsx,.yml}",
-    "lint": "eslint . --ext .js,.ts,.tsx && prettier --check **/*{.js,.json,.md,.scss,.ts,.tsx,.yml}",
+    "format": "eslint . --ext .js,.ts,.tsx --fix && prettier --write **/*{.css,.js,.json,.md,.scss,.ts,.tsx,.yml}",
+    "lint": "eslint . --ext .js,.ts,.tsx && prettier --check **/*{.css,.js,.json,.md,.scss,.ts,.tsx,.yml}",
     "start": "nodemon -e ts --exec ts-node --watch server server"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "uuid": "^8.3.0"
+    "core-js": "^3.6.5"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
@@ -28,7 +27,6 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/terser-webpack-plugin": "^4.2.0",
-    "@types/uuid": "^8.3.0",
     "@types/webpack": "^4.41.22",
     "@types/webpack-dev-middleware": "^3.7.2",
     "@types/webpack-env": "^1.15.3",

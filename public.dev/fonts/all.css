@@ -1,0 +1,12 @@
+@font-face {
+	font-family: 'Raleway';
+	font-style: normal;
+	font-weight: 400;
+	src: url('Raleway-Regular.ttf');
+}
+
+@font-face {
+	font-family: 'Work Sans';
+	font-style: normal;
+	src: url('WorkSans-VariableFont_wght.ttf');
+}

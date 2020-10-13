@@ -1,31 +1,6 @@
 import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
-
-const templateContent: (
-	templateParameters: HtmlWebpackPlugin.TemplateParameter
-) => string = ({ htmlWebpackPlugin }) => `
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<title>Participe Actif</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="theme-color" content="#000000" />
-		<link href="https://fonts.googleapis.com/css2?family=Raleway&family=Work+Sans:wght@600;700&display=swap" rel="stylesheet">
-		${htmlWebpackPlugin.tags.headTags.join('\n')}
-	</head>
-	<body>
-		<noscript>You need to enable JavaScript to run this app.</noscript>
-		<div id="root"></div>
-		<script crossorigin src="https://unpkg.com/d3@6/dist/d3.min.js"></script>
-		<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
-		${htmlWebpackPlugin.tags.bodyTags.join('\n')}
-	</body>
-</html>
-`;
 
 export const COMMON_CONFIG: webpack.Configuration = {
 	externals: {
@@ -186,14 +161,8 @@ export const COMMON_CONFIG: webpack.Configuration = {
 	},
 	output: {
 		filename: `[name].[hash].js`,
-		libraryTarget: 'umd',
-		path: path.resolve(__dirname, '..', 'dist'),
 	},
 	plugins: [
-		new HtmlWebpackPlugin({
-			inject: false,
-			templateContent: templateContent as () => string,
-		}),
 		new MiniCssExtractPlugin({
 			esModule: true,
 			filename: `[name].[hash].css`,

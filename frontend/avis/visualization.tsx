@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import React from 'react';
-import { v4 as uuidV4 } from 'uuid';
 import {
 	BAND_INFOS,
 	BAND_HEIGHT_GROW_FACTOR,
@@ -32,10 +31,10 @@ const BAND_DIMENSIONS = Array.from({ length: BAND_INFOS.length }).map(() => {
 const VIEWBOX_SPAN = bandRadius + VIEWBOX_MARGIN;
 
 let leftNotRight = false;
+let nextPetalUniqueIndex = 0;
 
 class BandDatum {
 	readonly index: number;
-	readonly uuid: string;
 
 	groupIndexInDimension = 0;
 
@@ -44,12 +43,10 @@ class BandDatum {
 	private _dimensionIndex = 0;
 	private _displayedVote = 0;
 	private _petals: PetalDatum[] = [];
-	private _previousD = '';
 	private _previousDisplayedVote = 0;
 
 	constructor(index: number) {
 		this.index = index;
-		this.uuid = uuidV4();
 	}
 
 	get d() {
@@ -80,7 +77,6 @@ class BandDatum {
 			dimension.internalRadius * dimension.internalRadius - halfSpan * halfSpan
 		);
 
-		this._previousD = this._d;
 		this._d = BAND_INFOS[this.index]
 			.generateShape({
 				attach,
@@ -122,8 +118,9 @@ class BandDatum {
 					const angle = vote === 0 ? -90 : (this.index / vote) * 360 - 90;
 					return `rotate(${angle})`;
 				},
-				uuid: uuidV4(),
+				uniqueIndex: nextPetalUniqueIndex,
 			};
+			++nextPetalUniqueIndex;
 
 			if (leftNotRight) {
 				this._petals.splice(1, 0, petal);
@@ -142,10 +139,6 @@ class BandDatum {
 		return this._petals;
 	}
 
-	get previousD() {
-		return this._previousD;
-	}
-
 	get previousDisplayedVote() {
 		return this._previousDisplayedVote;
 	}
@@ -155,7 +148,7 @@ interface PetalDatum {
 	band: BandDatum;
 	index: number;
 	transform: string;
-	uuid: string;
+	uniqueIndex: number;
 }
 
 interface Props {
@@ -168,6 +161,7 @@ export class Visualization extends React.Component<
 	private readonly svgRef: React.RefObject<SVGSVGElement>;
 
 	private svg!: d3.Selection<SVGSVGElement, unknown, null, undefined>;
+	private defs!: d3.Selection<SVGDefsElement, unknown, null, undefined>;
 
 	private bands: BandDatum[];
 	private randomVotesIntervalId: NodeJS.Timeout | undefined;
@@ -198,6 +192,8 @@ export class Visualization extends React.Component<
 					' '
 				)
 			);
+
+		this.defs = this.svg.append('defs');
 
 		this.updateSVG();
 	}
@@ -260,12 +256,13 @@ export class Visualization extends React.Component<
 		const dimensionIndexToGroupCountMappings = BAND_DIMENSIONS.map(() => 0);
 		this.svg
 			.selectAll<SVGGElement, BandDatum>('g.band')
-			.data(this.bands, ({ uuid }) => uuid)
+			.data(this.bands, ({ index }) => index)
 			.join((enter) =>
 				enter
 					.append('g')
 					.attr('class', 'band')
 					.attr('transform', 'scale(0)')
+					.attr('fill', ({ index }) => BAND_INFOS[index].color)
 					.call((group) => {
 						group.append('circle').attr('class', 'circle');
 						group.append('g').attr('class', 'petals');
@@ -305,7 +302,6 @@ export class Visualization extends React.Component<
 			})
 			.call((group) => {
 				group
-					.attr('fill', ({ index }) => BAND_INFOS[index].color)
 					.transition()
 					.duration(TRANSITION_DURATION)
 					.ease(TRANSITION_EASING)
@@ -338,21 +334,17 @@ export class Visualization extends React.Component<
 
 				group
 					.select('.petals')
-					.selectAll<SVGPathElement, PetalDatum>('path')
+					.selectAll<SVGUseElement, PetalDatum>('use')
 					.data(
 						({ petals }) => petals,
-						({ uuid }) => uuid
+						({ uniqueIndex }) => uniqueIndex
 					)
 					.join(
 						(enter) =>
 							enter
-								.append('path')
-								.attr('d', ({ band }) => band.previousD)
-								.attr('transform', ({ band }) =>
-									band.previousDisplayedVote === 0
-										? 'rotate(-90) scale(1,0)'
-										: 'rotate(-90)'
-								),
+								.append('use')
+								.attr('href', ({ band }) => `#petal${band.index}`)
+								.attr('transform', 'rotate(-90)'),
 						undefined,
 						(exit) =>
 							exit.call((petal) => {
@@ -360,21 +352,30 @@ export class Visualization extends React.Component<
 									.transition()
 									.duration(TRANSITION_DURATION)
 									.ease(TRANSITION_EASING)
-									.attr('d', ({ band }) => band.d)
-									.attr('transform', ({ band }) =>
-										band.petals.length === 0
-											? 'rotate(-90) scale(1,0)'
-											: 'rotate(-90)'
-									)
+									.attr('transform', 'rotate(-90)')
 									.remove();
 							})
 					)
 					.transition()
 					.duration(TRANSITION_DURATION)
 					.ease(TRANSITION_EASING)
-					.attr('d', ({ band }) => band.d)
 					.attr('transform', ({ transform }) => transform);
 			});
+
+		this.defs
+			.selectAll<SVGPathElement, BandDatum>('.petal')
+			.data(this.bands, ({ index }) => index)
+			.join((enter) =>
+				enter
+					.append('path')
+					.attr('class', 'petal')
+					.attr('id', (_datum, index) => `petal${index}`)
+			)
+
+			.transition()
+			.duration(TRANSITION_DURATION)
+			.ease(TRANSITION_EASING)
+			.attr('d', ({ d }) => d);
 	}
 }
 
