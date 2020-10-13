@@ -4,7 +4,6 @@ import { Band } from './types';
 export const BAND_INFOS: Band[] = [
 	{
 		color: '#00ca81',
-		name: 'Très favorable',
 		generateShape({ attach, dimension, halfSpan }) {
 			return [
 				'M',
@@ -26,10 +25,10 @@ export const BAND_INFOS: Band[] = [
 				halfSpan,
 			];
 		},
+		name: 'Très favorable',
 	},
 	{
 		color: '#00ffc2',
-		name: 'Favorable',
 		generateShape({ attach, dimension, halfSpan }) {
 			const control = (attach + dimension.externalRadius - halfSpan) / 2;
 
@@ -51,10 +50,10 @@ export const BAND_INFOS: Band[] = [
 				halfSpan,
 			];
 		},
+		name: 'Favorable',
 	},
 	{
 		color: '#0031f0',
-		name: 'Neutre',
 		generateShape({ attach, dimension, halfSpan }) {
 			return [
 				'M',
@@ -68,10 +67,10 @@ export const BAND_INFOS: Band[] = [
 				halfSpan,
 			];
 		},
+		name: 'Neutre',
 	},
 	{
 		color: '#ff8564',
-		name: 'Défavorable',
 		generateShape({ attach, dimension, halfSpan }) {
 			const control =
 				attach * 0.1 + (dimension.externalRadius - halfSpan) * 0.9;
@@ -97,10 +96,10 @@ export const BAND_INFOS: Band[] = [
 				halfSpan,
 			];
 		},
+		name: 'Défavorable',
 	},
 	{
 		color: '#ff2a1f',
-		name: 'Très défavorable',
 		generateShape({ attach, dimension, halfSpan }) {
 			const top =
 				dimension.internalRadius +
@@ -141,6 +140,7 @@ export const BAND_INFOS: Band[] = [
 				halfSpan,
 			];
 		},
+		name: 'Très défavorable',
 	},
 ];
 

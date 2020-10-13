@@ -1,6 +1,6 @@
-import { v4 as uuidV4 } from 'uuid';
-import React from 'react';
 import * as d3 from 'd3';
+import React from 'react';
+import { v4 as uuidV4 } from 'uuid';
 import {
 	BAND_INFOS,
 	BAND_HEIGHT_GROW_FACTOR,
@@ -22,8 +22,8 @@ let bandRadius = SMALLEST_BAND_RADIUS;
 let bandHeight = SMALLEST_BAND_HEIGHT;
 const BAND_DIMENSIONS = Array.from({ length: BAND_INFOS.length }).map(() => {
 	const bandDimension: BandDimension = {
-		internalRadius: bandRadius,
 		externalRadius: bandRadius + bandHeight,
+		internalRadius: bandRadius,
 	};
 	bandRadius += bandHeight + BAND_MARGIN;
 	bandHeight *= BAND_HEIGHT_GROW_FACTOR;
@@ -116,13 +116,13 @@ class BandDatum {
 		while (this._petals.length < this._displayedVote) {
 			const petal: PetalDatum = {
 				band: this,
-				uuid: uuidV4(),
 				index: 0,
 				get transform() {
 					const vote = getVote();
 					const angle = vote === 0 ? -90 : (this.index / vote) * 360 - 90;
 					return `rotate(${angle})`;
 				},
+				uuid: uuidV4(),
 			};
 
 			if (leftNotRight) {

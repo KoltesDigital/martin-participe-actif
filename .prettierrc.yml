@@ -1,7 +1,8 @@
 overrides:
   - files:
-      - "*.scss"
       - "*.js"
+      - "*.jsx"
+      - "*.scss"
       - "*.ts"
       - "*.tsx"
     options:
@@ -11,6 +12,7 @@ overrides:
       useTabs: true
   - files:
       - "*.json"
+      - "*.md"
       - "*.yml"
     options:
       tabWidth: 2

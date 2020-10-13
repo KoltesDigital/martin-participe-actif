@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Visualization } from './visualization';
-import styles from './layout.scss';
-import { BAND_INFOS } from './constants';
 import { Button } from './button';
+import { BAND_INFOS } from './constants';
+import styles from './layout.scss';
+import { Visualization } from './visualization';
 
 export const Layout: React.FC = () => {
 	const [votes, setVotes] = useState(BAND_INFOS.map(() => 0));
