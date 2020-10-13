@@ -1,6 +1,5 @@
 import { v4 as uuidV4 } from 'uuid';
 import React from 'react';
-import { Context } from '../context';
 import * as d3 from 'd3';
 import {
 	BAND_INFOS,
@@ -166,9 +165,6 @@ interface Props {
 export class Visualization extends React.Component<
 	Props & React.ComponentProps<'svg'>
 > {
-	static contextType = Context;
-
-	readonly context!: Context;
 	private readonly svgRef: React.RefObject<SVGSVGElement>;
 
 	private svg!: d3.Selection<SVGSVGElement, unknown, null, undefined>;
