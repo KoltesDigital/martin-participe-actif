@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "ts-node server/build",
+    "build:local": "ts-node server/build-local",
     "format": "eslint . --ext .js,.ts,.tsx --fix && prettier --write **/*{.css,.js,.json,.md,.scss,.ts,.tsx,.yml}",
     "lint": "eslint . --ext .js,.ts,.tsx && prettier --check **/*{.css,.js,.json,.md,.scss,.ts,.tsx,.yml}",
     "start": "nodemon -e ts --exec ts-node --watch server server"
@@ -21,6 +22,7 @@
     "@types/connect-history-api-fallback": "^1.3.3",
     "@types/d3": "^5.16.3",
     "@types/express": "^4.17.8",
+    "@types/fs-extra": "^9.0.2",
     "@types/mini-css-extract-plugin": "^0.9.1",
     "@types/node": "^14.11.2",
     "@types/optimize-css-assets-webpack-plugin": "^5.0.1",
@@ -45,6 +47,7 @@
     "eslint-plugin-sort-keys-fix": "^1.1.1",
     "express": "^4.17.1",
     "file-loader": "^6.1.0",
+    "fs-extra": "^9.0.1",
     "html-webpack-plugin": "^4.5.0",
     "mini-css-extract-plugin": "^0.11.2",
     "nodemon": "^2.0.4",

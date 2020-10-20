@@ -63,14 +63,12 @@ const compiler = webpack(CONFIG);
 
 const app = express();
 
-app.use(express.static(path.dirname(require.resolve('d3'))));
+app.use(express.static(path.resolve(require.resolve('d3'), '..')));
+
+app.use(express.static(path.resolve(require.resolve('react'), '..', 'umd')));
 
 app.use(
-	express.static(path.join(path.dirname(require.resolve('react')), 'umd'))
-);
-
-app.use(
-	express.static(path.join(path.dirname(require.resolve('react-dom')), 'umd'))
+	express.static(path.resolve(require.resolve('react-dom'), '..', 'umd'))
 );
 
 app.use(express.static(path.resolve(__dirname, '..', 'public')));
